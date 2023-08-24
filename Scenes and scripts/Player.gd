@@ -1,30 +1,42 @@
 extends CharacterBody2D
 
-@export var diving_speed = 500
-@export var initial_gas_amount = 300 #litres
-var current_gas_amount
-var gas_consume_rate = 1 #litres per second
-@export var hypothermia_death_resistance = 1000
-var paused = false
+'''
+Initial variables serve to reset the current variables in each game
+Current variables is what the upgrades will modify
+Remaining variables changes in a dive session
+'''
+@export var initial_diving_speed = 500
+var current_diving_speed
+@export var initial_max_gas = 300 #litres
+var current_max_gas
+var remaining_gas
+@export var initial_gas_consume_rate = 1 #litres per second
+var current_gas_consume_rate
+@export var initial_hypothermia_resistance = 1000
+var current_hypothermia_resistance
+var remaining_hypothermia_resistance
+var paused = true
 
-signal gas_consumed(initial_amount, current_amount)
-signal dead
-signal touched_boat(initial_gas_amount, gas_consume_rate, hypothermia_death_resistance, diving_speed)
-
-func _ready():
-	current_gas_amount = initial_gas_amount
+signal gas_consumed(max, remaining)
+signal dead(cause)
+signal touched_boat(max_gas, gas_consume_rate, hypothermia_resistance, diving_speed)
 
 func _process(delta):
 	if not paused:
-		current_gas_amount -= gas_consume_rate * delta
-		gas_consumed.emit(initial_gas_amount, current_gas_amount)
+		remaining_gas -= current_gas_consume_rate * delta
+		gas_consumed.emit(current_max_gas, remaining_gas)
 		
 		#For every 1000 units below sea, resistance is used at a rate of 1 per second
-		hypothermia_death_resistance -= position.y / 1000 * delta
-		print("Resistance remaining: %s" % hypothermia_death_resistance) #replace with a snowflake effect
+		remaining_hypothermia_resistance -= position.y / 1000 * delta
+		#print("Resistance remaining: %s" % current_hypothermia_resistance) #replace with a snowflake effect
 		
-		if current_gas_amount < 0 or hypothermia_death_resistance < 0:
-			dead.emit()
+		#💀💀💀💀💀
+		if remaining_gas < 0:
+			paused = true
+			dead.emit("asphyxiation")
+		if remaining_hypothermia_resistance < 0:
+			paused = true
+			dead.emit("hypothermia")
 
 func _physics_process(delta):
 	if not paused:
@@ -44,24 +56,34 @@ func _physics_process(delta):
 		if direction != Vector2.ZERO:
 			direction = direction.normalized()
 		#Actually moving
-		velocity.x = direction.x * diving_speed
-		velocity.y = direction.y * diving_speed
+		velocity.x = direction.x * current_diving_speed
+		velocity.y = direction.y * current_diving_speed
 		
 		move_and_slide()
 
 func _on_boat_body_entered(body):
+	#Open shop and pause player, or win if "rare treasure" acquired
 	paused = true
-	touched_boat.emit(initial_gas_amount, gas_consume_rate, hypothermia_death_resistance, diving_speed)
+	touched_boat.emit(current_max_gas, current_gas_consume_rate, current_hypothermia_resistance, current_diving_speed)
 
-func _on_user_interface_next_day_button_pressed(new_initial_gas_amount, new_gas_consume_rate, new_hypothermia_death_resistance, new_diving_speed):
-	initial_gas_amount = new_initial_gas_amount
-	gas_consume_rate = new_gas_consume_rate
-	hypothermia_death_resistance = new_hypothermia_death_resistance
-	diving_speed = new_diving_speed
-	
-	current_gas_amount = initial_gas_amount
-	
+func _on_user_interface_next_day_button_pressed(new_max_gas, new_gas_consume_rate, new_hypothermia_resistance, new_diving_speed):
+	#Resume from shop, modifying the stats
+	current_max_gas = new_max_gas
+	current_gas_consume_rate = new_gas_consume_rate
+	current_hypothermia_resistance = new_hypothermia_resistance
+	current_diving_speed = new_diving_speed
+	start_dive()
+
+func _on_user_interface_game_started():
+	current_diving_speed = initial_diving_speed
+	current_max_gas = initial_max_gas
+	current_gas_consume_rate = initial_gas_consume_rate
+	current_hypothermia_resistance = initial_hypothermia_resistance
+	start_dive()
+
+func start_dive():
+	#Replenish the remaining variables each day, then start with the player moved away from the boat
+	remaining_gas = current_max_gas
+	remaining_hypothermia_resistance = current_hypothermia_resistance
 	paused = false
-	
-	#Move the player away from the boat
-	position.y += 250
+	position = Vector2(1000, 500)

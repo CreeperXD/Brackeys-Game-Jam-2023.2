@@ -35,7 +35,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Valuable" type="Area2D"]
+[node name="Valuable" type="Area2D" groups=["Valueables"]]
 z_index = -1
 collision_layer = 4
 collision_mask = 2

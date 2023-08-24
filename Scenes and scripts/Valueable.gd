@@ -1,7 +1,7 @@
 extends Area2D
 
-@export var minimum_worth := 500
-@export var maximum_worth := 600
+@export var minimum_worth = 500
+@export var maximum_worth = 600
 var worth
 
 signal collected(worth)
