@@ -4,6 +4,7 @@ extends Node2D
 var valueable_locations
 @export var rare_treasure_scene: PackedScene
 var rare_treasure_locations
+var screen_size
 
 func spawn_valuables():
 	#Clear all the previous valueables first
@@ -43,3 +44,11 @@ func spawn_rare_treasure():
 func _on_user_interface_game_started():
 	spawn_valuables()
 	spawn_rare_treasure()
+
+func _ready():
+	screen_size = get_viewport_rect().size
+	
+func _process(delta):
+	#I really don't know if there is a better way of glueing the user interface onto the screen
+	#Had to sacrifice the smooth movement of the camera
+	$UserInterface.position = $Player.position - screen_size / 2

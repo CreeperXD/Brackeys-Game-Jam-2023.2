@@ -17,7 +17,7 @@ var current_hypothermia_resistance
 var remaining_hypothermia_resistance
 var paused = true
 
-signal gas_consumed(max, remaining)
+signal gas_consumed(max_gas, remaining_gas)
 signal dead(cause)
 signal touched_boat(max_gas, gas_consume_rate, hypothermia_resistance, diving_speed)
 

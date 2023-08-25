@@ -7,7 +7,8 @@ var new_gas_consume_rate
 var new_hypothermia_resistance
 var new_diving_speed
 var movement_penalty = 10
-var gas_tank_price = 500
+var initial_gas_tank_price = 500
+var current_gas_tank_price
 var rebreather_price = 5000
 var heated_suit_price = 5000
 var rare_treasure_collected = false
@@ -17,9 +18,6 @@ signal game_started
 
 func _ready():
 	#Start from main menu
-	$Shop/AdditionalTanks/AdditionalTanksPurchase.text = "%s$" % gas_tank_price
-	$Shop/Rebreather/RebreatherPurchase.text = "%s$" % rebreather_price
-	$Shop/HeatedSuit/HeatedSuitPurchase.text = "%s$" % heated_suit_price
 	$Shop.hide()
 	$Money.hide()
 	$Days.hide()
@@ -48,9 +46,9 @@ func _on_next_day_button_pressed():
 	$Days.text = "Day %s" % day
 	next_day_button_pressed.emit(new_max_gas, new_gas_consume_rate, new_hypothermia_resistance, new_diving_speed)
 
-func _on_player_gas_consumed(max, remaining):
+func _on_player_gas_consumed(max_gas, remaining_gas):
 	#Change the gas bar length based on the gas consumed
-	$GasBar/Fill.size.y = $GasBar.size.y * remaining / max
+	$GasBar/Fill.size.y = $GasBar.size.y * remaining_gas / max_gas
 
 func _on_player_dead(cause):
 	#Lose
@@ -81,12 +79,12 @@ func _on_player_touched_boat(max_gas, gas_consume_rate, hypothermia_resistance, 
 		new_diving_speed = diving_speed
 
 func _on_additional_tanks_purchase_pressed():
-	if has_enough_money(gas_tank_price):
+	if has_enough_money(current_gas_tank_price):
 		new_max_gas += 20
 		#Technically this could go to negative speed, but should be too expsenive to get there
 		new_diving_speed -= movement_penalty
-		gas_tank_price += 100
-		$Shop/AdditionalTanks/AdditionalTanksPurchase.text = "%s$" % gas_tank_price
+		current_gas_tank_price += 100
+		$Shop/AdditionalTanks/AdditionalTanksPurchase.text = "%s$" % current_gas_tank_price
 
 func _on_rebreather_purchase_pressed():
 	if has_enough_money(rebreather_price):
@@ -136,6 +134,12 @@ func _on_credits_button_pressed():
 
 func _on_dive_button_pressed():
 	#Resetting stuff to start a game
+	current_gas_tank_price = initial_gas_tank_price
+	$Shop/AdditionalTanks/AdditionalTanksPurchase.text = "%s$" % current_gas_tank_price
+	$Shop/Rebreather/RebreatherPurchase.text = "%s$" % rebreather_price
+	$Shop/Rebreather/RebreatherPurchase.disabled = false
+	$Shop/HeatedSuit/HeatedSuitPurchase.text = "%s$" % heated_suit_price
+	$Shop/HeatedSuit/HeatedSuitPurchase.disabled = false
 	rare_treasure_collected = false
 	$RareTreasureIndicator.hide()
 	$Story.hide()
