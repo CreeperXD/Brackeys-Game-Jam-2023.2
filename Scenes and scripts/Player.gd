@@ -59,6 +59,12 @@ func _physics_process(delta):
 		velocity.x = direction.x * current_diving_speed
 		velocity.y = direction.y * current_diving_speed
 		
+		if velocity.x != 0:
+			$AnimatedSprite2D.speed_scale = 2
+			$AnimatedSprite2D.flip_h = velocity.x > 0
+		else:
+			$AnimatedSprite2D.speed_scale = 1
+		
 		move_and_slide()
 
 func _on_boat_body_entered(body):
