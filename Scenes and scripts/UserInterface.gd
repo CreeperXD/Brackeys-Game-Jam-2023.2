@@ -6,12 +6,12 @@ var new_max_gas
 var new_gas_consume_rate
 var new_hypothermia_resistance
 var new_diving_speed
-var movement_penalty = 5
+var movement_penalty = 10
 var additional_tanks_penalty = 250
 var initial_gas_tank_price = 500
 var current_gas_tank_price
-var rebreather_price = 5000
-var heated_suit_price = 5000
+var rebreather_price = 3000
+var heated_suit_price = 2000
 var rare_treasure_collected = false
 
 signal next_day_button_pressed(new_max_gas, new_gas_consume_rate, new_hypothermia_resistance, new_diving_speed)
@@ -107,7 +107,7 @@ func _on_rebreather_purchase_pressed():
 
 func _on_heated_suit_purchase_pressed():
 	if has_enough_money(heated_suit_price):
-		new_hypothermia_resistance = 5000
+		new_hypothermia_resistance = 2000
 		$Shop/HeatedSuit/HeatedSuitPurchase.text = "Purchased"
 		$Shop/HeatedSuit/HeatedSuitPurchase.disabled = true
 
@@ -146,6 +146,9 @@ func _on_credits_button_pressed():
 	$Credits.show()
 	$MainMenuButton.show()
 
+func _on_quit_button_pressed():
+	get_tree().quit()
+
 func _on_dive_button_pressed():
 	#Resetting stuff to start a game
 	current_gas_tank_price = initial_gas_tank_price
@@ -157,7 +160,7 @@ func _on_dive_button_pressed():
 	rare_treasure_collected = false
 	$RareTreasureIndicator.hide()
 	$Story.hide()
-	money = 696969
+	money = 0
 	day = 1
 	$Money.text = "%s$" % money
 	$Money.show()

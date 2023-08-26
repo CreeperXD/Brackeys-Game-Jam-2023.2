@@ -302,9 +302,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -300.0
-offset_top = -900.0
+offset_top = -930.0
 offset_right = 300.0
-offset_bottom = -750.0
+offset_bottom = -780.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 75
@@ -318,9 +318,9 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -300.0
-offset_top = -650.0
+offset_top = -730.0
 offset_right = 300.0
-offset_bottom = -500.0
+offset_bottom = -580.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 75
@@ -334,13 +334,29 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -300.0
-offset_top = -400.0
+offset_top = -530.0
 offset_right = 300.0
-offset_bottom = -250.0
+offset_bottom = -380.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_font_sizes/font_size = 75
 text = "Credits"
+
+[node name="QuitButton" type="Button" parent="MainMenu"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -330.0
+offset_right = 300.0
+offset_bottom = -180.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 75
+text = "Quit"
 
 [node name="Settings" type="Control" parent="."]
 visible = false
@@ -593,5 +609,6 @@ text = "Main Menu"
 [connection signal="pressed" from="MainMenu/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="MainMenu/SettingsButton" to="." method="_on_settings_button_pressed"]
 [connection signal="pressed" from="MainMenu/CreditsButton" to="." method="_on_credits_button_pressed"]
+[connection signal="pressed" from="MainMenu/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="pressed" from="Story/DiveButton" to="." method="_on_dive_button_pressed"]
 [connection signal="pressed" from="MainMenuButton" to="." method="_on_main_menu_button_pressed"]
