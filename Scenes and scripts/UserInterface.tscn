@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://yhjuxau1ofv1"]
+[gd_scene load_steps=7 format=3 uid="uid://yhjuxau1ofv1"]
 
 [ext_resource type="Script" path="res://Scenes and scripts/UserInterface.gd" id="1_l6m42"]
 [ext_resource type="Texture2D" uid="uid://idmpg5s1jjpr" path="res://Art/Shop items/Gas tank.png" id="2_m4vjt"]
-[ext_resource type="Texture2D" uid="uid://bxsxdgjv0o2xb" path="res://icon.svg" id="3_b4i03"]
 [ext_resource type="Texture2D" uid="uid://dho4tfivd713b" path="res://Art/Shop items/Rebreather.png" id="3_tmdag"]
 [ext_resource type="Texture2D" uid="uid://buguh2n74wi3i" path="res://Art/Shop items/Heated suit.png" id="4_s51j2"]
+[ext_resource type="Texture2D" uid="uid://b1ey72815gjgd" path="res://Art/Valueables and rare treasure/Rare treasure.png" id="5_3nsjo"]
+[ext_resource type="Texture2D" uid="uid://dsinyxu4dq4b4" path="res://Art/Letter.png" id="6_j0poo"]
 
 [node name="UserInterface" type="Control"]
 layout_mode = 3
@@ -14,6 +15,15 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_l6m42")
+
+[node name="Sea" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 1, 0.392157)
 
 [node name="Shop" type="Control" parent="."]
 visible = false
@@ -185,9 +195,9 @@ layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 175.0
+offset_left = 150.0
 offset_top = 250.0
-offset_right = 275.0
+offset_right = 225.0
 offset_bottom = 750.0
 grow_vertical = 2
 rotation = 3.14159
@@ -202,6 +212,30 @@ offset_bottom = -250.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 1, 1, 1)
+
+[node name="HypothermiaResistanceBar" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 250.0
+offset_top = 250.0
+offset_right = 325.0
+offset_bottom = 750.0
+grow_vertical = 2
+rotation = 3.14159
+color = Color(0, 0, 1, 1)
+
+[node name="Fill" type="ColorRect" parent="HypothermiaResistanceBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -250.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.392157, 0, 1)
 
 [node name="RareTreasureIndicator" type="Control" parent="."]
 visible = false
@@ -219,7 +253,23 @@ grow_horizontal = 0
 grow_vertical = 2
 
 [node name="Sprite2D" type="Sprite2D" parent="RareTreasureIndicator"]
-texture = ExtResource("3_b4i03")
+texture = ExtResource("5_3nsjo")
+
+[node name="Label" type="Label" parent="RareTreasureIndicator/Sprite2D"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -195.0
+offset_right = 55.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 50
+text = "Is this it?!"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="MainMenu" type="Control" parent="."]
 layout_mode = 1
@@ -411,14 +461,9 @@ grow_vertical = 2
 theme_override_font_sizes/font_size = 75
 text = "Dive"
 
-[node name="Label" type="Label" parent="Story"]
-layout_mode = 0
-offset_left = 474.0
-offset_top = 581.0
-offset_right = 856.0
-offset_bottom = 687.0
-theme_override_font_sizes/font_size = 75
-text = "letter here"
+[node name="Sprite2D" type="Sprite2D" parent="Story"]
+position = Vector2(750, 640)
+texture = ExtResource("6_j0poo")
 
 [node name="Lose" type="Control" parent="."]
 visible = false

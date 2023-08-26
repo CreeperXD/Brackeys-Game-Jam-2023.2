@@ -18,8 +18,9 @@ var remaining_hypothermia_resistance
 var paused = true
 
 signal gas_consumed(max_gas, remaining_gas)
+signal hypothermia_resistance_lost(max, remaining)
 signal dead(cause)
-signal touched_boat(max_gas, gas_consume_rate, hypothermia_resistance, diving_speed)
+signal touched_rope(max_gas, gas_consume_rate, hypothermia_resistance, diving_speed)
 
 func _process(delta):
 	if not paused:
@@ -28,7 +29,7 @@ func _process(delta):
 		
 		#For every 1000 units below sea, resistance is used at a rate of 1 per second
 		remaining_hypothermia_resistance -= position.y / 1000 * delta
-		#print("Resistance remaining: %s" % current_hypothermia_resistance) #replace with a snowflake effect
+		hypothermia_resistance_lost.emit(current_hypothermia_resistance, remaining_hypothermia_resistance)
 		
 		#💀💀💀💀💀
 		if remaining_gas < 0:
@@ -55,22 +56,22 @@ func _physics_process(delta):
 		#Normalise the direction so moving diagonally is as fast as moving vertically or horizontally
 		if direction != Vector2.ZERO:
 			direction = direction.normalized()
+			$AnimatedSprite2D.speed_scale = 2
+		else:
+			$AnimatedSprite2D.speed_scale = 1
 		#Actually moving
 		velocity.x = direction.x * current_diving_speed
 		velocity.y = direction.y * current_diving_speed
 		
 		if velocity.x != 0:
-			$AnimatedSprite2D.speed_scale = 2
 			$AnimatedSprite2D.flip_h = velocity.x > 0
-		else:
-			$AnimatedSprite2D.speed_scale = 1
 		
 		move_and_slide()
 
-func _on_boat_body_entered(body):
+func _on_rope_body_entered(body):
 	#Open shop and pause player, or win if "rare treasure" acquired
 	paused = true
-	touched_boat.emit(current_max_gas, current_gas_consume_rate, current_hypothermia_resistance, current_diving_speed)
+	touched_rope.emit(current_max_gas, current_gas_consume_rate, current_hypothermia_resistance, current_diving_speed)
 
 func _on_user_interface_next_day_button_pressed(new_max_gas, new_gas_consume_rate, new_hypothermia_resistance, new_diving_speed):
 	#Resume from shop, modifying the stats
@@ -92,4 +93,4 @@ func start_dive():
 	remaining_gas = current_max_gas
 	remaining_hypothermia_resistance = current_hypothermia_resistance
 	paused = false
-	position = Vector2(1000, 500)
+	position = Vector2(0, 500)

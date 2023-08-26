@@ -6,7 +6,8 @@ var new_max_gas
 var new_gas_consume_rate
 var new_hypothermia_resistance
 var new_diving_speed
-var movement_penalty = 10
+var movement_penalty = 5
+var additional_tanks_penalty = 250
 var initial_gas_tank_price = 500
 var current_gas_tank_price
 var rebreather_price = 5000
@@ -15,6 +16,7 @@ var rare_treasure_collected = false
 
 signal next_day_button_pressed(new_max_gas, new_gas_consume_rate, new_hypothermia_resistance, new_diving_speed)
 signal game_started
+signal game_ended
 
 func _ready():
 	#Start from main menu
@@ -22,6 +24,7 @@ func _ready():
 	$Money.hide()
 	$Days.hide()
 	$GasBar.hide()
+	$HypothermiaResistanceBar.hide()
 	$RareTreasureIndicator.hide()
 	$MainMenu.show()
 	$Settings.hide()
@@ -42,6 +45,7 @@ func _on_next_day_button_pressed():
 	#Close shop
 	$Shop.hide()
 	$GasBar.show()
+	$HypothermiaResistanceBar.show()
 	day += 1
 	$Days.text = "Day %s" % day
 	next_day_button_pressed.emit(new_max_gas, new_gas_consume_rate, new_hypothermia_resistance, new_diving_speed)
@@ -50,29 +54,38 @@ func _on_player_gas_consumed(max_gas, remaining_gas):
 	#Change the gas bar length based on the gas consumed
 	$GasBar/Fill.size.y = $GasBar.size.y * remaining_gas / max_gas
 
+func _on_player_hypothermia_resistance_lost(max, remaining):
+	#Change the hypothermia resistance bar length based on the said resistance lost
+	$HypothermiaResistanceBar/Fill.size.y = $HypothermiaResistanceBar.size.y * remaining / max
+
 func _on_player_dead(cause):
 	#Lose
 	$Money.hide()
 	$Days.hide()
 	$GasBar.hide()
+	$HypothermiaResistanceBar.hide()
 	$Lose/Message.text = "You died of %s. Better luck next time!" % cause
 	$Lose.show()
 	$MainMenuButton.show()
+	game_ended.emit()
 
-func _on_player_touched_boat(max_gas, gas_consume_rate, hypothermia_resistance, diving_speed):
+func _on_player_touched_rope(max_gas, gas_consume_rate, hypothermia_resistance, diving_speed):
 	if rare_treasure_collected:
 		#Win
 		$Money.hide()
 		$Days.hide()
 		$GasBar.hide()
+		$HypothermiaResistanceBar.hide()
 		$Win/Message.text = "You found the \"rare treasure\" in %s days " % day
 		$Win/Message.text += "with %s$ remaining! Well done!" % money
 		$Win.show()
 		$MainMenuButton.show()
+		game_ended.emit()
 	else:
 		#Open shop
 		$Shop.show()
 		$GasBar.hide()
+		$HypothermiaResistanceBar.hide()
 		new_max_gas = max_gas
 		new_gas_consume_rate = gas_consume_rate
 		new_hypothermia_resistance = hypothermia_resistance
@@ -83,7 +96,7 @@ func _on_additional_tanks_purchase_pressed():
 		new_max_gas += 20
 		#Technically this could go to negative speed, but should be too expsenive to get there
 		new_diving_speed -= movement_penalty
-		current_gas_tank_price += 100
+		current_gas_tank_price += additional_tanks_penalty
 		$Shop/AdditionalTanks/AdditionalTanksPurchase.text = "%s$" % current_gas_tank_price
 
 func _on_rebreather_purchase_pressed():
@@ -111,6 +124,7 @@ func has_enough_money(price):
 
 func _on_main_menu_button_pressed():
 	#This button is reused in many pages, so
+	$RareTreasureIndicator.hide()
 	$MainMenu.show()
 	$Settings.hide()
 	$Credits.hide()
@@ -149,4 +163,5 @@ func _on_dive_button_pressed():
 	$Money.show()
 	$Days.show()
 	$GasBar.show()
+	$HypothermiaResistanceBar.show()
 	game_started.emit()

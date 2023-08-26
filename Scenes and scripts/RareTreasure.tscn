@@ -1,10 +1,10 @@
 [gd_scene load_steps=4 format=3 uid="uid://c63o8t5jmtptd"]
 
-[ext_resource type="Texture2D" uid="uid://bxsxdgjv0o2xb" path="res://icon.svg" id="1_iieww"]
 [ext_resource type="Script" path="res://Scenes and scripts/RareTreasure.gd" id="1_j4mbx"]
+[ext_resource type="Texture2D" uid="uid://b1ey72815gjgd" path="res://Art/Valueables and rare treasure/Rare treasure.png" id="2_yn122"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d0i2l"]
-size = Vector2(100, 100)
+size = Vector2(150, 150)
 
 [node name="RareTreasure" type="Area2D" groups=["RareTreasure"]]
 z_index = -1
@@ -16,6 +16,6 @@ script = ExtResource("1_j4mbx")
 shape = SubResource("RectangleShape2D_d0i2l")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_iieww")
+texture = ExtResource("2_yn122")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

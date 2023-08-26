@@ -1,37 +1,37 @@
 [gd_scene load_steps=7 format=3 uid="uid://fakkjmwhfxu"]
 
 [ext_resource type="Script" path="res://Scenes and scripts/Valueable.gd" id="1_58dje"]
-[ext_resource type="Texture2D" uid="uid://l3cenlew45hv" path="res://Art/placeholder/cyan valuable.png" id="2_kfkap"]
-[ext_resource type="Texture2D" uid="uid://fn8f6t78ld8v" path="res://Art/placeholder/green valuable.png" id="3_onopc"]
-[ext_resource type="Texture2D" uid="uid://ug1kpumrn6go" path="res://Art/placeholder/magenta valuable.png" id="4_ci7ju"]
+[ext_resource type="Texture2D" uid="uid://1h6asymk76c0" path="res://Art/Valueables and rare treasure/Chest.png" id="2_4da1i"]
+[ext_resource type="Texture2D" uid="uid://d02f3eya7mlph" path="res://Art/Valueables and rare treasure/Scrap.png" id="3_lopdy"]
+[ext_resource type="Texture2D" uid="uid://cjatkctk31vlo" path="res://Art/Valueables and rare treasure/Weird stuff.png" id="4_x1l46"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_68p5s"]
-size = Vector2(100, 100)
+size = Vector2(150, 150)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lvjub"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_kfkap")
+"texture": ExtResource("2_4da1i")
 }],
 "loop": true,
-"name": &"cyan",
+"name": &"chest",
 "speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_onopc")
+"texture": ExtResource("3_lopdy")
 }],
 "loop": true,
-"name": &"green",
+"name": &"scrap",
 "speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_ci7ju")
+"texture": ExtResource("4_x1l46")
 }],
 "loop": true,
-"name": &"magenta",
+"name": &"weird stuff",
 "speed": 5.0
 }]
 
@@ -40,12 +40,14 @@ z_index = -1
 collision_layer = 4
 collision_mask = 2
 script = ExtResource("1_58dje")
+minimum_worth = 200
+maximum_worth = 500
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_68p5s")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_lvjub")
-animation = &"cyan"
+animation = &"chest"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

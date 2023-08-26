@@ -45,9 +45,12 @@ func _on_user_interface_game_started():
 	spawn_valuables()
 	spawn_rare_treasure()
 
+func _on_user_interface_game_ended():
+	$Player.position = $TitleScreenDiver.position
+
 func _ready():
 	screen_size = get_viewport_rect().size
-	
+
 func _process(delta):
 	#I really don't know if there is a better way of glueing the user interface onto the screen
 	#Had to sacrifice the smooth movement of the camera
