@@ -18,7 +18,7 @@ var remaining_hypothermia_resistance
 var paused = true
 
 signal gas_consumed(max_gas, remaining_gas)
-signal hypothermia_resistance_lost(max, remaining)
+signal hypothermia_resistance_lost(max_heat, remaining_heat)
 signal dead(cause)
 signal touched_rope(max_gas, gas_consume_rate, hypothermia_resistance, diving_speed)
 
@@ -53,8 +53,8 @@ func _physics_process(delta):
 		if Input.is_action_pressed("move_down"):
 			direction.y += 1
 		
-		#Normalise the direction so moving diagonally is as fast as moving vertically or horizontally
 		if direction != Vector2.ZERO:
+			#Normalise the direction so moving diagonally is as fast as moving vertically or horizontally
 			direction = direction.normalized()
 			$AnimatedSprite2D.speed_scale = 2
 		else:
@@ -63,6 +63,7 @@ func _physics_process(delta):
 		velocity.x = direction.x * current_diving_speed
 		velocity.y = direction.y * current_diving_speed
 		
+		#Flip player around horizontally based on their horizontal direction
 		if velocity.x != 0:
 			$AnimatedSprite2D.flip_h = velocity.x > 0
 		

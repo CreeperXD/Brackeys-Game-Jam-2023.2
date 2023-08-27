@@ -13,6 +13,7 @@ var current_gas_tank_price
 var rebreather_price = 3000
 var heated_suit_price = 2000
 var rare_treasure_collected = false
+var sfx_volume = 0
 
 signal next_day_button_pressed(new_max_gas, new_gas_consume_rate, new_hypothermia_resistance, new_diving_speed)
 signal game_started
@@ -36,10 +37,12 @@ func _ready():
 func _on_valuable_collected(worth):
 	money += worth
 	$Money.text = "%s$" % money
+	$ItemCollected.play()
 	
 func _on_rare_treasure_collected():
 	rare_treasure_collected = true
 	$RareTreasureIndicator.show()
+	$ItemCollected.play()
 
 func _on_next_day_button_pressed():
 	#Close shop
@@ -54,9 +57,9 @@ func _on_player_gas_consumed(max_gas, remaining_gas):
 	#Change the gas bar length based on the gas consumed
 	$GasBar/Fill.size.y = $GasBar.size.y * remaining_gas / max_gas
 
-func _on_player_hypothermia_resistance_lost(max, remaining):
+func _on_player_hypothermia_resistance_lost(max_heat, remaining_heat):
 	#Change the hypothermia resistance bar length based on the said resistance lost
-	$HypothermiaResistanceBar/Fill.size.y = $HypothermiaResistanceBar.size.y * remaining / max
+	$HypothermiaResistanceBar/Fill.size.y = $HypothermiaResistanceBar.size.y * remaining_heat / max_heat
 
 func _on_player_dead(cause):
 	#Lose
@@ -83,6 +86,7 @@ func _on_player_touched_rope(max_gas, gas_consume_rate, hypothermia_resistance, 
 		game_ended.emit()
 	else:
 		#Open shop
+		$OpenShop.play()
 		$Shop.show()
 		$GasBar.hide()
 		$HypothermiaResistanceBar.hide()
@@ -112,14 +116,13 @@ func _on_heated_suit_purchase_pressed():
 		$Shop/HeatedSuit/HeatedSuitPurchase.disabled = true
 
 func has_enough_money(price):
-	#reminder to add sfx
 	if money >= price:
 		money -= price
 		$Money.text = "%s$" % money
-		#Kaching
+		$EnoughMoney.play()
 		return true
 	else:
-		#Nope
+		$NoMoney.play()
 		return false
 
 func _on_main_menu_button_pressed():
@@ -168,3 +171,23 @@ func _on_dive_button_pressed():
 	$GasBar.show()
 	$HypothermiaResistanceBar.show()
 	game_started.emit()
+
+func _on_buttons_mouse_entered():
+	$ButtonHover.play()
+
+func _on_buttons_pressed():
+	$ButtonClick.play()
+
+func _on_music_slider_value_changed(value):
+	$Music.volume_db = value
+
+func _on_sfx_slider_value_changed(value):
+	$ButtonClick.volume_db = value
+	$ButtonHover.volume_db = value
+	$EnoughMoney.volume_db = value
+	$NoMoney.volume_db = value
+	$ItemCollected.volume_db = value
+	$OpenShop.volume_db = value
+
+func _on_slider_drag_ended(value_changed):
+	$ButtonClick.play()

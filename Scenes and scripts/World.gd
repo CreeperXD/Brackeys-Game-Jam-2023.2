@@ -46,9 +46,11 @@ func _on_user_interface_game_started():
 	spawn_rare_treasure()
 
 func _on_user_interface_game_ended():
+	#Move the player back to the title screen area
 	$Player.position = $TitleScreenDiver.position
 
 func _ready():
+	#See function below
 	screen_size = get_viewport_rect().size
 
 func _process(delta):

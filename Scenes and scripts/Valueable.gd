@@ -11,7 +11,7 @@ func _ready():
 	
 	rotation = randf_range(-PI, PI)
 	
-	#Randomly choose an animation
+	#Will spawn as a random type of valueable
 	var valuable_types = $AnimatedSprite2D.sprite_frames.get_animation_names()
 	$AnimatedSprite2D.play(valuable_types[randi() % valuable_types.size()])
 
